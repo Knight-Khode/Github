@@ -15,7 +15,8 @@ export class App extends Component {
     loading:false,
     users:[],
     alert:null,
-    user:{}
+    user:{},
+    repos:[]
   }
 /*
   async componentDidMount(){
@@ -36,6 +37,13 @@ export class App extends Component {
     const res = await axios.get(`https://api.github.com/users/${username}&client_id=32e8873788cd42590918&client_secret=cda96905482c6941f8ec602ba3894fcdc4b78d03`)
     console.log(res.data)
     this.setState({user:res.data,loading:false})
+  }
+
+  //Get users repos
+  getUserRepos = async username =>{
+    this.setState({loading:true})
+    const res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=32e8873788cd42590918&client_secret=cda96905482c6941f8ec602ba3894fcdc4b78d03`)
+    this.setState({repos:res.data,loading:false})
   }
 
   setAlert=(msg,type)=>{
@@ -73,7 +81,7 @@ export class App extends Component {
             <Route exact path="/about" component={About}/>
             <Route exact path="/user/:login" render={
               props=>(
-                <User {...props} getUser={this.getUser} loading={this.state.loading}/>
+                <User {...props} getUser={this.getUser} loading={this.state.loading} getUserRepos={this.getUserRepos} repos={this.state.repos}/>
               )
             }/>
           </Switch>
